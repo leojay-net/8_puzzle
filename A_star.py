@@ -59,7 +59,7 @@ def solve(state):
 
 # test the code with
 t0 = time.time()
-for i, puzzle in enumerate(solve([[1, 7, 5], [3, 4, 0], [6, 2, 8]])):
+for i, puzzle in enumerate(solve([[1, 2, 5], [3, 4, 8], [6, 7, 0]])):
     for j in puzzle:
         print(j, "\n")
     print("steps :", i)
