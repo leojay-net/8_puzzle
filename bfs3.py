@@ -25,17 +25,27 @@ def display(p):
 # function to check the puzzle and also change the current node
 def solve_puzzle(puzzle_state):
     if puzzle_state==final_puzzle: # check if the current puzzle is equal to the final puzzle
-        display(puzzle_state) #F
+        display(puzzle_state) # takes the puzzle to the function display and calls it
         return True # return true if they are equal
     if puzzle_state not in visitedList: # then we check if we have worked with that particular puzzle before so we don't end up in an endless loop
-        display(puzzle_state)  #F
+        display(puzzle_state)  # takes the puzzle to the function display and calls it
         queue.put(puzzle_state) # inserting the puzzle into the queue
         visitedList.append(puzzle_state) # append puzzle to visitedlist so we don't repeat the same puzzle_state again
     return False
 
 
+"""def solve_puzzle(puzzle_state):
+    if puzzle_state==final_puzzle:
+        display(puzzle_state)
+        return True
+    if puzzle_state not in visitedList:
+        display(puzzle_state)
+        queue.put(puzzle_state)
+        visitedList.append(puzzle_state)
+    return False"""
 
-initial_puzzle = [1,5,4, 3,7,2, 6,0,8]
+
+initial_puzzle = [1,5,4, 3,7,2, 6,8,0]
 final_puzzle = [0,1,2, 3,4,5, 6,7,8]
 
 found = False
