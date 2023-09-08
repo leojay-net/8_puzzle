@@ -1,0 +1,133 @@
+from heapq IMPORT heappush as push, heappop as pop
+
+IMPORT time
+
+
+
+# function to RETURN the Manhattan distance FOR a given puzzle state
+
+DEFINE FUNCTION heuristics(state):
+
+    SET distance TO 0
+
+    FOR i IN range(3):
+
+        FOR j IN range(3):
+
+            IF state[i][j] != 0:
+
+                SET target_i, target_j TO (state[i][j] - 1) // 3, (state[i][j] - 1) % 3
+
+                distance += abs(i - target_i) + abs(j - target_j)
+
+    RETURN distance
+
+
+
+# function to check IF a given puzzle state is the goal state
+
+DEFINE FUNCTION is_goal(state):
+
+    RETURN state EQUALS [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
+
+
+# function to RETURN a list of possible next states FOR a given state...Move the empty tile through all possible direction and stores it IN a list
+
+DEFINE FUNCTION neighbours(state):
+
+    SET nexts TO []
+
+    FOR i IN range(3):
+
+        FOR j IN range(3):
+
+            IF state[i][j] EQUALS 0:
+
+                IF i > 0:
+
+                    SET next TO [row[:] FOR row IN state]
+
+                    SET next[i][j], next[i-1][j] TO next[i-1][j], next[i][j]
+
+                    nexts.append(next)
+
+                IF i < 2:
+
+                    SET next TO [row[:] FOR row IN state]
+
+                    SET next[i][j], next[i+1][j] TO next[i+1][j], next[i][j]
+
+                    nexts.append(next)
+
+                IF j > 0:
+
+                    SET next TO [row[:] FOR row IN state]
+
+                    SET next[i][j], next[i][j-1] TO next[i][j-1], next[i][j]
+
+                    nexts.append(next)
+
+                IF j < 2:
+
+                    SET next TO [row[:] FOR row IN state]
+
+                    SET next[i][j], next[i][j+1] TO next[i][j+1], next[i][j]
+
+                    nexts.append(next)
+
+    RETURN nexts
+
+
+
+# function to solve the 8 puzzle using A* search
+
+DEFINE FUNCTION solve(state):
+
+    IF is_goal(state):
+
+        RETURN state
+
+    SET heap TO []
+
+    push(heap, (heuristics(state), 0, state, [])) # push the values to the list heap
+
+    SET visited TO set() # a closed list of visited neighbours
+
+    WHILE heap:
+
+        SET _, cost, state, puzzle_path TO pop(heap) #pops values the list
+
+        IF is_goal(state):
+
+            RETURN puzzle_path
+
+        IF str(state) IN visited:
+
+            continue
+
+        visited.add(str(state))
+
+        FOR next IN neighbours(state):
+
+            push(heap, (heuristics(next) + cost + 1, cost + 1, next, puzzle_path + [next]))
+
+    RETURN None
+
+
+
+# test the code with
+
+SET t0 TO time.time()
+
+FOR i, puzzle IN enumerate(solve([[1, 7, 5], [3, 4, 0], [6, 2, 8]])):
+
+    FOR j IN puzzle:
+
+        OUTPUT(j, "\n")
+
+    OUTPUT("steps :", i)
+
+SET t1 TO time.time()
+
+OUTPUT("time:",t1-t0)

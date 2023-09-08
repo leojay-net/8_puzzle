@@ -1,0 +1,152 @@
+# Queue is a data structure that operates on a FIFO cycle(First In First Out)
+
+from queue IMPORT Queue  
+
+
+
+
+
+# copy has two methods to create copies
+
+# deepcopy() is used to create a copy of the queue without any connection to the parent queue
+
+# copy() is used to to create a copy of the queue with connection to the parent queue
+
+IMPORT copy
+
+
+
+# time is used to calculate the time spent solving the puzzle
+
+IMPORT time
+
+
+
+
+
+# function to display puzzle IN the matrix format 
+
+DEFINE FUNCTION display(p):
+
+    global step # makes the step global.....to be used anywhere IN the program
+
+    FOR i IN range(len(p)):
+
+        IF i %3 EQUALS 0 and i>0:
+
+            OUTPUT("")
+
+        OUTPUT(str(p[i])+" ",end="")
+
+    OUTPUT("\n")
+
+    OUTPUT("steps :",step)
+
+    step += 1
+
+    
+
+# function to check the puzzle and also change the current node
+
+DEFINE FUNCTION solve_puzzle(puzzle_state):
+
+    IF puzzle_state==final_puzzle: # check IF the current puzzle is equal to the final puzzle
+
+        CALL display(puzzle_state) 
+
+        RETURN True # RETURN true IF they are equal
+
+    IF puzzle_state not IN visitedList: # then we check IF we have worked with that particular puzzle before so we don't end up IN an endless loop
+
+        CALL display(puzzle_state)  
+
+        queue.put(puzzle_state) # inserting the puzzle into the queue
+
+        visitedList.append(puzzle_state) # append puzzle to visitedlist so we don't repeat the same puzzle_state again
+
+    RETURN False
+
+
+
+SET initial_puzzle TO [1,5,4, 3,7,2, 6,0,8]
+
+SET final_puzzle TO [0,1,2, 3,4,5, 6,7,8]
+
+
+
+SET found TO False
+
+global step
+
+SET step TO 0
+
+SET visitedList TO []
+
+SET queue TO Queue()
+
+queue.put(initial_puzzle)
+
+visitedList.append(final_puzzle)
+
+
+
+SET t0 TO time.time()
+
+
+
+WHILE (not found and queue.empty() EQUALS False):
+
+    SET currentNode TO queue.get() # gets the values as it is added to the queue
+
+    SET empty_tile TO currentNode.index(0) # gets the index location of 0 which stands FOR empty file
+
+
+
+    IF empty_tile!=0 and empty_tile!=1 and empty_tile!=2: # check IF the empty file is not on the first row of the puzzle
+
+        SET State TO copy.deepcopy(currentNode) # creates a copy of currentnode and is not connected to the currentnode
+
+        SET State[empty_tile] TO State[empty_tile-3] # set the location place of zero to another value 
+
+        SET State[empty_tile-3] TO 0 # set the location of another value to 0
+
+        SET found TO solve_puzzle(State) # call function solve_puzzle()
+
+    IF empty_tile!=0 and empty_tile!=3 and empty_tile!=6 and found==False: # checks IF the empty_tile is not on the first column to move it to the left.
+
+        SET State TO copy.deepcopy(currentNode)
+
+        SET State[empty_tile] TO State[empty_tile-1]
+
+        SET State[empty_tile-1] TO 0
+
+        SET found TO solve_puzzle(State)
+
+    IF empty_tile!=6 and empty_tile!=7 and empty_tile!=8 and found==False: # checks IF the empty_tile is not on the last row column to move it down.
+
+        SET State TO copy.deepcopy(currentNode)
+
+        SET State[empty_tile] TO State[empty_tile+3]
+
+        SET State[empty_tile+3] TO 0
+
+        SET found TO solve_puzzle(State)
+
+    IF empty_tile!=2 and empty_tile!=5 and empty_tile!=8 and found==False: # checks IF the empty_tile is not on the last column to move it to the right.
+
+        SET State TO copy.deepcopy(currentNode)
+
+        SET State[empty_tile] TO State[empty_tile+1]
+
+        SET State[empty_tile+1] TO 0
+
+        SET found TO solve_puzzle(State)
+
+SET t1 TO time.time() # subtracts final time with initial time to get the time it takes to solve the puzzle
+
+OUTPUT('------')
+
+OUTPUT('Time:', t1-t0)
+
+
+
